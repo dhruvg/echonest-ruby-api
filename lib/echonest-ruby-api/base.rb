@@ -83,7 +83,8 @@ module Echonest
                      format: "json")
 
       httparty_options = { query_string_normalizer: HTTParty::Request::NON_RAILS_QUERY_STRING_NORMALIZER,
-                           query: options }
+                           query: options,
+                           headers: {'Content-Type' => 'multipart/form-data'} }
 
       response = HTTParty.post("#{ Base.base_uri }#{ endpoint }", httparty_options)
       handle_response(response)
