@@ -113,7 +113,8 @@ module Echonest
       if response_code.eql?(0)
         json[:response]
       else
-        raise Echonest::Error.new(response_code, response), "Error code #{ response_code }"
+        raise Echonest::Error.new(response_code, response),
+              "Error code #{ response_code } with response: #{ response }"
       end
     end
   end
