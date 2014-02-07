@@ -2,7 +2,7 @@
 http_interactions:
 - request:
     method: post
-    uri: http://developer.echonest.com/api/v4/track/upload?api_key=BNOAEBT3IZYZI6WXI&format=json&url=http%253A%252F%252Fwww.foobar.com%252Fbaz.mp3
+    uri: http://developer.echonest.com/api/v4/track/upload?api_key=BNOAEBT3IZYZI6WXI&format=json&url=http://www.foobar.com/baz.mp3
     body:
       encoding: US-ASCII
       string: ''

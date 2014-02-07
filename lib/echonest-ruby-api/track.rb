@@ -13,7 +13,6 @@ module Echonest
 
     def upload(options = {})
       raise ArgumentError, 'You must include a url for the mp3' if options[:url].nil?
-      options[:url] = CGI::escape(options[:url])
       post_response(options)[:track]
     end
 
