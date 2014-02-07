@@ -10,3 +10,4 @@ log/*
 pkg/*
 .DS_STORE
 vendor
+.idea/

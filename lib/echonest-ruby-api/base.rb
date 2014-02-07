@@ -14,6 +14,10 @@ module Echonest
       get(endpoint, options)
     end
 
+    def post_response(options = {})
+      post(endpoint, options)
+    end
+
     def entity_name
       self.class.to_s.split('::').last.downcase
     end
@@ -52,20 +56,37 @@ module Echonest
     # Returns a response as a Hash
     def get(endpoint, options = {})
       options.merge!(api_key: @api_key,
-                           format: "json")
+                     format: "json")
 
       httparty_options = { query_string_normalizer: HTTParty::Request::NON_RAILS_QUERY_STRING_NORMALIZER,
                            query: options }
 
       response = HTTParty.get("#{ Base.base_uri }#{ endpoint }", httparty_options)
-      json = MultiJson.load(response.body, symbolize_keys: true)
-      response_code = json[:response][:status][:code]
+      handle_response(response)
+    end
 
-      if response_code.eql?(0)
-        json[:response]
-      else
-        raise Echonest::Error.new(response_code, response), "Error code #{ response_code }"
-      end
+    # Performs a simple HTTP post on an API endpoint.
+    #
+    # Examples:
+    #     post('track/upload', url: 'http://www.foobar.com/baz.mp3')
+    #     #=> JSON response as hash
+    #
+    # Raises an +ArgumentError+ if the Echonest API responds with
+    # an error.
+    #
+    # * +endpoint+ - The name of an API endpoint as a String
+    # * +options+ - A Hash of options to pass to the end point.
+    #
+    # Returns a response as a Hash
+    def post(endpoint, options = {})
+      options.merge!(api_key: @api_key,
+                     format: "json")
+
+      httparty_options = { query_string_normalizer: HTTParty::Request::NON_RAILS_QUERY_STRING_NORMALIZER,
+                           query: options }
+
+      response = HTTParty.post("#{ Base.base_uri }#{ endpoint }", httparty_options)
+      handle_response(response)
     end
 
     # Cross-platform way of finding an executable in the $PATH.
@@ -82,5 +103,18 @@ module Echonest
       return nil
     end
 
+    private
+
+    # Handles response from HTTParty request
+    def handle_response(response)
+      json = MultiJson.load(response.body, symbolize_keys: true)
+      response_code = json[:response][:status][:code]
+
+      if response_code.eql?(0)
+        json[:response]
+      else
+        raise Echonest::Error.new(response_code, response), "Error code #{ response_code }"
+      end
+    end
   end
 end
