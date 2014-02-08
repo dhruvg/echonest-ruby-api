@@ -72,9 +72,10 @@ module Echonest
       artists
     end
 
-    def songs
+    def songs(options = {start: 0, results: 15})
       songs = []
-      get_response(name: @name)[:songs].each do |s|
+      options.merge!(name: @name) if options[:id].nil?
+      get_response(options)[:songs].each do |s|
         songs << { s[:id] => s[:title] }
       end
       songs
