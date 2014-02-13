@@ -62,7 +62,7 @@ module Echonest
                            query: options }
 
       response = HTTParty.get("#{ Base.base_uri }#{ endpoint }", httparty_options)
-      handle_response(response)
+      handle_response(endpoint, options, :get, response)
     end
 
     # Performs a simple HTTP post on an API endpoint.
@@ -87,7 +87,7 @@ module Echonest
                            headers: {'Content-Type' => 'multipart/form-data'} }
 
       response = HTTParty.post("#{ Base.base_uri }#{ endpoint }", httparty_options)
-      handle_response(response)
+      handle_response(endpoint, options, :post, response)
     end
 
     # Cross-platform way of finding an executable in the $PATH.
@@ -107,12 +107,16 @@ module Echonest
     private
 
     # Handles response from HTTParty request
-    def handle_response(response)
+    def handle_response(endpoint, options, http_method, response)
       json = MultiJson.load(response.body, symbolize_keys: true)
       response_code = json[:response][:status][:code]
 
       if response_code.eql?(0)
         json[:response]
+      elsif response_code.eql?(3)
+        # Rate limited - wait 90 seconds and try request again
+        sleep 90
+        self.send(http_method, endpoint, options)
       else
         raise Echonest::Error.new(response_code, response),
               "Error code #{ response_code } with response: #{ response }"
