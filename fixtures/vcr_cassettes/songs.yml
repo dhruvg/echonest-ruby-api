@@ -2,7 +2,7 @@
 http_interactions:
 - request:
     method: get
-    uri: http://developer.echonest.com/api/v4/artist/songs?api_key=BNOAEBT3IZYZI6WXI&format=json&name=Weezer
+    uri: http://developer.echonest.com/api/v4/artist/songs?api_key=BNOAEBT3IZYZI6WXI&format=json&name=Weezer&results=15&start=0
     body:
       encoding: US-ASCII
       string: ''

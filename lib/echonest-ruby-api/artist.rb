@@ -75,10 +75,11 @@ module Echonest
     def songs(options = {start: 0, results: 15})
       songs = []
       options.merge!(name: @name) if options[:id].nil?
-      get_response(options)[:songs].each do |s|
+      response = get_response(options)
+      response[:songs].each do |s|
         songs << { s[:id] => s[:title] }
       end
-      songs
+      { :total => response[:total], :songs => songs }
     end
 
     def profile(options = {})

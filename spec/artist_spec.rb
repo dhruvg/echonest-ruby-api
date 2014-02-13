@@ -199,17 +199,24 @@ describe Echonest::Artist do
 
   describe '#songs' do
 
+    it "should return total songs" do
+      VCR.use_cassette('songs') do
+        create_valid_artist
+        @a.songs[:total].should be_a Integer
+      end
+    end
+
     it 'should return an Array of a Hash of songs' do
       VCR.use_cassette('songs') do
         create_valid_artist
-        @a.songs.should be_a Array
+        @a.songs[:songs].should be_a Array
       end
     end
 
     it 'should return a valid hash for each song' do
       VCR.use_cassette('songs') do
         create_valid_artist
-        @a.songs.each do |k|
+        @a.songs[:songs].each do |k|
           k.should be_a Hash
         end
       end
