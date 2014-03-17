@@ -93,5 +93,13 @@ module Echonest
       get_response(options)[:terms]
     end
 
+    def top_hottt(options = {})
+      options = {limit: 300, genre: 'rap'}.merge(options)
+      artists = []
+      get_response(options)[:artists].each do |a|
+        artists << Artist.new(@api_key, a[:name], a[:foreign_ids], a[:id])
+      end
+      artists
+    end
   end
 end
