@@ -46,7 +46,10 @@ module Echonest
     end
 
     def hotttnesss(options = {})
-      response = get_response(id: @id, name: @name, type: options.fetch(:type, 'overall'))
+      options[:type] = options.fetch(:type, 'overall')
+      options[:id] = @id if @id
+      options[:name] = @name if @name && !@id
+      response = get_response(options)
       response[entity_name.to_sym][__method__.to_sym]
     end
 
