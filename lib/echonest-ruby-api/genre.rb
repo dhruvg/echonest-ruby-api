@@ -4,7 +4,7 @@ require_relative 'base'
 
 module Echonest
 
-  class Artist < Echonest::Base
+  class Genre < Echonest::Base
 
     attr_accessor :name
 
