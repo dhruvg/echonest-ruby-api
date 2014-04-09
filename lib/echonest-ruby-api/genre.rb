@@ -13,8 +13,8 @@ module Echonest
       @api_key = api_key
     end
 
-    def artists(options = { results: 100 })
-      response = get_response(results: options[:results], name: @name)
+    def artists(options = { results: 15 })
+      response = get_response(results: options[:results], name: @name.downcase)
       response[:artists].collect do |a|
         Artist.new(@api_key, a[:name], nil, a[:id])
       end
