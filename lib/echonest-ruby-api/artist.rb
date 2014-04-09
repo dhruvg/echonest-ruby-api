@@ -79,7 +79,7 @@ module Echonest
       options[:id] = @id if @id
       options[:name] = @name if @name && !@id
       response = get_response(options)
-      response[entity_name.to_sym].collect do |a|
+      response[:artists].collect do |a|
         Artist.new(@api_key, a[:name], nil, a[:id])
       end
     end

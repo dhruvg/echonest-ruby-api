@@ -15,7 +15,7 @@ module Echonest
 
     def artists(options = { results: 100 })
       response = get_response(results: options[:results], name: @name)
-      response[__method__.to_sym].collect do |a|
+      response[:artists].collect do |a|
         Artist.new(@api_key, a[:name], nil, a[:id])
       end
     end
