@@ -75,6 +75,15 @@ module Echonest
       artists
     end
 
+    def similar(options = { results: 20 })
+      options[:id] = @id if @id
+      options[:name] = @name if @name && !@id
+      response = get_response(options)
+      response[entity_name.to_sym].collect do |a|
+        Artist.new(@api_key, a[:name], nil, a[:id])
+      end
+    end
+
     def songs(options = {start: 0, results: 15})
       songs = []
       options.merge!(name: @name) if options[:id].nil?
