@@ -26,6 +26,7 @@ module Echonest
       response = get_response(options)
       songs = []
       response[:songs].each do |song|
+        song[:audio_summary] = cleaned_audio_summary(song[:audio_summary])
         songs << song
       end
     end

@@ -19,7 +19,9 @@ module Echonest
     def profile(options = {})
       raise ArgumentError, 'You must include a tracking id' if options[:id].nil?
       options.merge!(bucket: 'audio_summary')
-      get_response(options)[:track]
+      response = get_response(options)[:track]
+      response[:audio_summary] = cleaned_audio_summary(response[:audio_summary])
+      response
     end
 
   end

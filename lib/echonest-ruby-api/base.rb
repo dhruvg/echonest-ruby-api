@@ -41,6 +41,15 @@ module Echonest
       4
     end
 
+    # audio_summary is a Hash of acoustic characteristics and values
+    def cleaned_audio_summary(audio_summary)
+      return nil if !audio_summary
+      # There is an weird issue in audio summary responses where speechiness is nil for certain tracks. I believe this
+      # is due to the track having no speech. To play nice with math, I convert nil to 0.
+      audio_summary[:speechiness] = 0 if audio_summary[:speechiness].nil?
+      audio_summary
+    end
+
     # Performs a simple HTTP get on an API endpoint.
     #
     # Examples:
