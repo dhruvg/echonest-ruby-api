@@ -11,9 +11,10 @@ module Echonest
       @api_key = api_key
     end
 
-    def upload(options = {})
-      raise ArgumentError, 'You must include a url for the mp3' if options[:url].nil?
-      post_response(options)[:track]
+    def upload(file_path, options = {})
+      raise ArgumentError, 'You must include a file path for the mp3' if file_path.nil?
+      options[:filetype] = 'mp3'
+      post_response(options, { 'Content-Type' => 'application/octet-stream' }, file_path)[:track]
     end
 
     def profile(options = {})

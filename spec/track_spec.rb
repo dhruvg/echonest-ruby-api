@@ -2,6 +2,9 @@ require 'spec_helper'
 require 'mocha/setup'
 
 describe Echonest::Track do
+  spec = Gem::Specification.find_by_name("echonest-ruby-api")
+  gem_root = spec.gem_dir
+
   it 'should initialize correct' do
     a = Echonest::Track.new('abc234')
     a.should be_a Echonest::Track
@@ -29,16 +32,14 @@ describe Echonest::Track do
     it "should upload the given mp3 and return a tracking id" do
       VCR.use_cassette('track_upload') do
         a = Echonest::Track.new('BNOAEBT3IZYZI6WXI')
-        options = { url: 'http://www.foobar.com/baz.mp3' }
-        a.upload(options).keys.should include :id, :status
+        a.upload("#{gem_root}/fixtures/test.mp3").keys.should include :id, :status
       end
     end
 
-    it "raises an ArgumentError if mp3 url is not provided" do
+    it "raises an ArgumentError if mp3 file path is not provided" do
       VCR.use_cassette('track_upload') do
         a = Echonest::Track.new('BNOAEBT3IZYZI6WXI')
-        options = { url: nil }
-        expect{a.upload(options)}.to raise_exception(ArgumentError)
+        expect{a.upload(nil)}.to raise_exception(ArgumentError)
       end
     end
   end

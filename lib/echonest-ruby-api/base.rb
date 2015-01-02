@@ -14,8 +14,8 @@ module Echonest
       get(endpoint, options)
     end
 
-    def post_response(options = {})
-      post(endpoint, options)
+    def post_response(options = {}, headers = {}, file_path = nil)
+      post(endpoint, options, headers, file_path)
     end
 
     def entity_name
@@ -85,15 +85,22 @@ module Echonest
     #
     # * +endpoint+ - The name of an API endpoint as a String
     # * +options+ - A Hash of options to pass to the end point.
+    # * +headers+ - A Hash of headers to pass to the end point.
+    # # +file_path+ - Path to file to post to the end point.
     #
     # Returns a response as a Hash
-    def post(endpoint, options = {})
+    def post(endpoint, options = {}, headers = {}, file_path = nil)
       options.merge!(api_key: @api_key,
-                     format: "json")
+                     format: 'json')
 
       httparty_options = { query_string_normalizer: HTTParty::Request::NON_RAILS_QUERY_STRING_NORMALIZER,
                            query: options,
-                           headers: {'Content-Type' => 'multipart/form-data'} }
+                           headers: { 'Content-Type' => 'multipart/form-data' }.merge!(headers) }
+      if file_path
+        f = File.new(file_path)
+        httparty_options[:body] = f.read
+        f.close()
+      end
 
       response = HTTParty.post("#{ Base.base_uri }#{ endpoint }", httparty_options)
       handle_response(endpoint, options, :post, response)
