@@ -97,12 +97,13 @@ module Echonest
                            query: options,
                            headers: { 'Content-Type' => 'multipart/form-data' }.merge!(headers) }
       if file_path
-        f = File.new(file_path)
-        httparty_options[:body] = f.read
-        f.close()
+        f = File.open(file_path)
+        httparty_options[:body_stream] = f
       end
 
       response = HTTParty.post("#{ Base.base_uri }#{ endpoint }", httparty_options)
+
+      f.close() if file_path
       handle_response(endpoint, options, :post, response)
     end
 
