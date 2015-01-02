@@ -99,6 +99,8 @@ module Echonest
       if file_path
         f = File.open(file_path)
         httparty_options[:body_stream] = f
+        httparty_options[:headers]['Transfer-Encoding'] = 'chunked'
+        httparty_options[:headers]['Content-Length'] = f.size
       end
 
       response = HTTParty.post("#{ Base.base_uri }#{ endpoint }", httparty_options)
